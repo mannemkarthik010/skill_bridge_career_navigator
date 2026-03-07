@@ -1,0 +1,25 @@
+{
+  "skills": [
+    {"name": "Python", "synonyms": ["python3"]},
+    {"name": "SQL", "synonyms": ["postgresql", "mysql", "sqlite", "t-sql"]},
+    {"name": "Git", "synonyms": ["github", "gitlab"]},
+    {"name": "Linux", "synonyms": ["bash", "shell scripting"]},
+
+    {"name": "AWS", "synonyms": ["amazon web services", "ec2", "s3", "iam", "lambda"]},
+    {"name": "Docker", "synonyms": ["containerization", "containers"]},
+    {"name": "Kubernetes", "synonyms": ["k8s"]},
+    {"name": "Terraform", "synonyms": ["iac", "infrastructure as code"]},
+    {"name": "CI/CD", "synonyms": ["continuous integration", "continuous delivery", "github actions", "jenkins"]},
+
+    {"name": "Pandas", "synonyms": ["dataframe"]},
+    {"name": "Excel", "synonyms": ["spreadsheets"]},
+    {"name": "Power BI", "synonyms": ["powerbi"]},
+    {"name": "Tableau", "synonyms": []},
+    {"name": "Statistics", "synonyms": ["hypothesis testing", "regression"]},
+
+    {"name": "Networking", "synonyms": ["tcp/ip", "dns", "http", "tls"]},
+    {"name": "SIEM", "synonyms": ["splunk", "sentinel"]},
+    {"name": "Threat Modeling", "synonyms": ["stride"]},
+    {"name": "OWASP", "synonyms": ["top 10", "web security"]}
+  ]
+}
