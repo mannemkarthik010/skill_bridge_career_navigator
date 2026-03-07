@@ -1,0 +1,56 @@
+{
+  "Terraform": [
+    {"title": "Terraform Beginner Tutorial", "provider": "HashiCorp Learn", "type": "free", "url": "https://developer.hashicorp.com/terraform/tutorials", "project": "Provision an EC2 + S3 using Terraform modules."}
+  ],
+  "Docker": [
+    {"title": "Docker Getting Started", "provider": "Docker Docs", "type": "free", "url": "https://docs.docker.com/get-started/", "project": "Dockerize a FastAPI app + add a health endpoint."}
+  ],
+  "Kubernetes": [
+    {"title": "Kubernetes Basics", "provider": "Kubernetes.io", "type": "free", "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/", "project": "Deploy a container to a local cluster (kind/minikube) with a Service."}
+  ],
+  "CI/CD": [
+    {"title": "GitHub Actions: Quickstart", "provider": "GitHub Docs", "type": "free", "url": "https://docs.github.com/actions/quickstart", "project": "Add a CI workflow that runs lint + tests on PRs."}
+  ],
+  "AWS": [
+    {"title": "AWS Cloud Practitioner Essentials", "provider": "AWS", "type": "free", "url": "https://aws.amazon.com/training/digital/aws-cloud-practitioner-essentials/", "project": "Deploy EC2 + RDS inside a custom VPC with IAM roles."}
+  ],
+  "Azure": [
+    {"title": "Azure Fundamentals", "provider": "Microsoft Learn", "type": "free", "url": "https://learn.microsoft.com/azure/", "project": "Deploy a VM + Azure Storage + configure RBAC roles."}
+  ],
+  "Google Cloud (GCP)": [
+    {"title": "Google Cloud Skills Boost", "provider": "Google Cloud", "type": "free", "url": "https://www.cloudskillsboost.google/", "project": "Create a VPC + GKE cluster + deploy a containerized app."}
+  ],
+  "Oracle Cloud (OCI)": [
+    {"title": "OCI Foundations Training", "provider": "Oracle", "type": "free", "url": "https://education.oracle.com/oracle-cloud-infrastructure/", "project": "Deploy a microservice to OCI Container Engine (OKE)."}
+  ],
+  "Linux": [
+    {"title": "Linux Command Line Basics", "provider": "Linux Foundation", "type": "free", "url": "https://training.linuxfoundation.org/resources/", "project": "Configure users, services, and networking on a Linux VM."}
+  ],
+  "Python": [
+    {"title": "Python for Automation", "provider": "Real Python", "type": "free", "url": "https://realpython.com/", "project": "Write a script to automate AWS resource creation using boto3."}
+  ],
+  "Networking": [
+    {"title": "AWS Networking Fundamentals", "provider": "AWS Docs", "type": "free", "url": "https://docs.aws.amazon.com/vpc/", "project": "Design a VPC with public/private subnets, NAT, and routing tables."}
+  ],
+  "Monitoring & Observability": [
+    {"title": "Prometheus & Grafana Basics", "provider": "Grafana Labs", "type": "free", "url": "https://grafana.com/tutorials/", "project": "Monitor a Kubernetes app with Prometheus + Grafana dashboard."}
+  ],
+  "Ansible": [
+    {"title": "Ansible Quickstart", "provider": "Red Hat", "type": "free", "url": "https://docs.ansible.com/", "project": "Automate installation of Nginx across multiple VMs."}
+  ],
+  "Git & GitOps": [
+    {"title": "Git Documentation", "provider": "Git SCM", "type": "free", "url": "https://git-scm.com/docs", "project": "Implement GitOps workflow using ArgoCD for Kubernetes deployment."}
+  ],
+  "Helm": [
+    {"title": "Helm Getting Started", "provider": "Helm Docs", "type": "free", "url": "https://helm.sh/docs/intro/", "project": "Package and deploy a Helm chart to a Kubernetes cluster."}
+  ],
+  "Cloud Security": [
+    {"title": "AWS Security Fundamentals", "provider": "AWS", "type": "free", "url": "https://aws.amazon.com/training/", "project": "Implement IAM policies, enable GuardDuty, configure WAF."}
+  ],
+  "Databricks": [
+    {"title": "Databricks Academy (Free Content)", "provider": "Databricks", "type": "free", "url": "https://academy.databricks.com/", "project": "Build a simple ETL pipeline using Databricks notebooks."}
+  ],
+  "Microservices & REST APIs": [
+    {"title": "Spring Boot REST Guide", "provider": "Spring", "type": "free", "url": "https://spring.io/guides", "project": "Build a REST API using Spring Boot and deploy via Docker."}
+  ]
+}
