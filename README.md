@@ -19,7 +19,7 @@ The system prioritizes:
 
 ## System Architecture
 
-![System Architecture](docs/diagrams/architecture.png)
+![System Architecture](Architecture_diagram.png)
 
 The system is structured into three layers:
 
@@ -44,7 +44,7 @@ The system is structured into three layers:
 
 ## Hybrid Profile Extraction
 
-![Hybrid Profile Extraction](docs/diagrams/hybrid_profile_extraction.png)
+![Hybrid Profile Extraction](Hybrid profile Extraction.png)
 
 Profile extraction uses a dual-path strategy:
 
@@ -64,7 +64,7 @@ This ensures resilience and reproducibility.
 
 ## RAG Architecture
 
-![RAG Architecture](docs/diagrams/rag_architecture.png)
+![RAG Architecture](RAG.png)
 
 Job retrieval is implemented using a local semantic retrieval pipeline:
 
@@ -80,7 +80,7 @@ Retrieved chunks are passed to the deterministic gap engine.
 
 ## Data Flow
 
-![Data Flow Diagram](docs/diagrams/data_flow.png)
+![Data Flow Diagram](dataflow Diagram.png)
 
 The data flow consists of:
 
