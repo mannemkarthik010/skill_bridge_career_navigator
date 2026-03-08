@@ -1,192 +1,142 @@
-# Skill Bridge – Evidence-Driven Career Navigator  
-**Palo Alto Networks – New Grad SWE Take-Home Case Study**
+# Skill Bridge – Evidence-Driven Career Navigator
+
+## Author
+Karthik
 
 ---
 
-## Candidate Name
-Karthik Mannem
+## Overview
 
-## Scenario Chosen
-Skill-Bridge Career Navigator
+Skill Bridge is a modular career intelligence system that analyzes synthetic resume and GitHub-style input, retrieves relevant job requirements from a structured dataset, computes demand-weighted skill gaps, and generates an actionable learning roadmap.
 
-## Estimated Time Spent
-~5–6 hours
-
----
-
-## Quick Links (Design Diagrams)
-- **System Architecture Diagram**
-- **Hybrid Profile Extraction Diagram**
-- **Data Flow Diagram**
-- **RAG Architecture Diagram**
-
-> Note: The diagrams below are included as **PNG files** in this repo for quick reviewer scanning.
+The system prioritizes:
+- Deterministic and explainable decision logic
+- AI integration with reliable fallback
+- Clear module boundaries
+- Privacy-safe synthetic datasets
 
 ---
 
-# 1. Overview
+## System Architecture
 
-Skill Bridge is a modular, evidence-driven career intelligence system that:
-- Parses synthetic resume + GitHub-like input
-- Retrieves relevant job requirements from a local synthetic dataset
-- Computes demand-weighted, explainable skill gaps
-- Generates a time/budget-aware learning roadmap
-- Produces mock interview questions grounded in the gap output
-
-This project prioritizes **engineering behavior** (requirements, validation, edge cases, testing, and tradeoffs) over UI polish.
-
----
-
-# 2. Diagrams
-
-## 2.1 System Architecture Diagram
 ![System Architecture](docs/diagrams/architecture.png)
 
-**What this shows:**  
-High-level module boundaries and how data moves from user inputs → intelligence pipeline → outputs.
+The system is structured into three layers:
+
+**Input Layer**
+- Resume parsing (PDF, DOCX, TXT)
+- Optional GitHub metadata ingestion
+- Role selection and user constraints
+
+**Intelligence Layer**
+- Hybrid profile extraction
+- Job requirement retrieval (semantic search)
+- Demand-weighted gap analysis
+- Roadmap generation
+- Interview generation
+
+**Output Layer**
+- Gap dashboard
+- Learning roadmap
+- Interview questions
 
 ---
 
-## 2.2 Hybrid Profile Extraction Diagram (AI + Fallback)
+## Hybrid Profile Extraction
+
 ![Hybrid Profile Extraction](docs/diagrams/hybrid_profile_extraction.png)
 
-**What this shows (technical):**
-- Primary path: LLM-based structured extraction returning schema-constrained JSON
-- Validation: strict schema parsing + taxonomy filtering
-- Fallback path: deterministic keyword extraction (token-boundary matching) when AI is unavailable or incorrect
+Profile extraction uses a dual-path strategy:
+
+**Primary Path**
+- LLM structured JSON extraction
+- Strict schema validation
+- Skill filtering via taxonomy
+
+**Fallback Path**
+- Deterministic keyword extraction
+- Token-boundary regex matching
+- No API dependency
+
+This ensures resilience and reproducibility.
 
 ---
 
-## 2.3 Data Flow Diagram (DFD)
-![Data Flow Diagram](docs/diagrams/data_flow.png)
+## RAG Architecture
 
-**What this shows:**  
-Processes and data stores end-to-end (resume parsing → extraction → retrieval → gap scoring → roadmap/interview → UI), including the synthetic datasets and configuration stores.
-
----
-
-## 2.4 RAG Architecture Diagram
 ![RAG Architecture](docs/diagrams/rag_architecture.png)
 
-**What this shows (technical):**
-- Job dataset ingestion (JSONL)
-- Chunking strategy
-- Embedding generation
-- FAISS indexing and top-K retrieval
-- Retrieved chunks feeding the deterministic gap engine
+Job retrieval is implemented using a local semantic retrieval pipeline:
+
+1. Synthetic job dataset (JSONL)
+2. Text chunking
+3. Embedding generation
+4. FAISS vector indexing
+5. Top-K similarity retrieval
+
+Retrieved chunks are passed to the deterministic gap engine.
 
 ---
 
-# 3. Core Flow (End-to-End)
+## Data Flow
 
-1. User uploads resume (PDF/DOCX/TXT) and optionally adds GitHub URL / project notes  
-2. System parses and validates input text  
-3. Profile extraction runs (AI → schema validation → taxonomy filtering → fallback if needed)  
-4. Job requirement retrieval runs over synthetic job dataset  
-5. Gap engine computes demand-weighted missing/exposure/strength skills with evidence snippets  
-6. Roadmap generator maps gaps → curated resources + mini-projects (budget/time aware)  
-7. Interview generator produces gap-focused and strength deep-dive questions  
-8. Streamlit UI renders dashboard outputs
+![Data Flow Diagram](docs/diagrams/data_flow.png)
 
----
+The data flow consists of:
 
-# 4. AI Integration + Deterministic Fallback
+1. Input validation and parsing
+2. Structured profile extraction
+3. Job retrieval
+4. Gap scoring
+5. Roadmap and interview generation
+6. UI rendering
 
-## Primary AI Capability: Structured Profile Extraction
-The system attempts to extract a structured profile object:
-- `target_role`
-- `skills[]` (constrained to taxonomy)
-- `projects[]`
-- `notes`
-
-### Reliability Controls
-- Strict schema validation (rejects malformed or extra keys)
-- Skill list filtered to the allowed taxonomy (prevents hallucinated skills)
-- If AI is unavailable/incorrect → deterministic fallback keyword extraction executes
-
-AI is used **assistively**; final decisions (gap scoring) remain deterministic for reproducibility and explainability.
+All data stores are local and synthetic.
 
 ---
 
-# 5. Gap Analysis Engine (Demand-Weighted & Explainable)
+## Gap Analysis Engine
 
-The gap engine is intentionally deterministic:
+The gap engine computes:
 
-**Inputs**
-- Extracted profile (skills)
-- Top-K retrieved job chunks
-- Skill taxonomy (name + synonyms)
-- Resume + GitHub text corpus
+- **Demand score** → frequency in retrieved job chunks
+- **User evidence** → frequency in resume/GitHub text
+- Classification:
+  - Strong
+  - Exposure
+  - Missing
 
-**Core Logic**
-- **Demand score**: counts how often each skill appears in retrieved job chunks  
-- **User evidence**: counts mentions in resume/GitHub text with snippets  
-- Classifies skills as:
-  - **Strong** (≥2 mentions)
-  - **Exposure** (1 mention)
-  - **Missing** (0 mentions)
-- Filters low-signal skills (e.g., demand < 2)
-- Ranks missing/exposure by demand score
-- Returns evidence snippets from both job side and user side to keep outputs explainable
+Only high-demand skills are surfaced. Each missing skill includes evidence snippets from job data for explainability.
 
 ---
 
-# 6. Data Safety & Security
+## AI Usage
 
-- Uses **synthetic datasets only** (no real personal data)
-- Does **not** scrape live sites
-- Does **not** commit API keys
-- Uses `.env` for secrets + includes `.env.example`
+AI is used for:
+- Structured profile extraction
+- Optional roadmap refinement
 
----
+Critical scoring remains deterministic.
 
-# 7. Testing (Basic Quality)
-
-At least two tests are included:
-- **Happy path**: valid input produces a profile + gap output structure
-- **Edge case**: empty/malformed input (or malformed AI response) triggers fallback or error handling
-
-Focus is on correctness under normal and degraded conditions.
+Fallback ensures functionality without AI.
 
 ---
 
-# 8. Tradeoffs & Prioritization
+## Data Safety
 
-Given the 4–6 hour timebox, I prioritized:
-- Clear modular design
-- Deterministic + explainable scoring
-- AI fallback reliability
-- Input validation and clear error handling
-- Basic tests (happy path + edge case)
-
-Intentionally cut for time:
-- Production deployment + auth
-- Real-time ingestion/scraping
-- Advanced ranking heuristics
-- Full test suite coverage
+- Synthetic datasets only
+- No scraping
+- No real personal data
+- `.env` for secrets
+- No committed API keys
 
 ---
 
-# 9. Future Improvements
+## Quick Start
 
-- Skill seniority weighting (junior vs senior requirements)
-- Periodic index refresh pipeline for job datasets
-- Improved evaluation metrics for roadmap effectiveness
-- CI workflow (lint + tests) to enforce quality gates
-- Expanded tests and property-based edge case coverage
+### Setup
 
----
-
-# 10. Quick Start
-
-## Prerequisites
-- Python 3.10+
-- pip
-
-## Setup
 ```bash
-git clone <repo>
-cd skill-bridge
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
