@@ -4,7 +4,7 @@
 ---
 
 ## Candidate Name
-Karthik Mannem
+Your Name
 
 ## Scenario Chosen
 Skill-Bridge Career Navigator
@@ -14,301 +14,179 @@ Skill-Bridge Career Navigator
 
 ---
 
+## Quick Links (Design Diagrams)
+- **System Architecture Diagram**
+- **Hybrid Profile Extraction Diagram**
+- **Data Flow Diagram**
+- **RAG Architecture Diagram**
+
+> Note: The diagrams below are included as **PNG files** in this repo for quick reviewer scanning.
+
+---
+
 # 1. Overview
 
-Skill Bridge is a modular, evidence-driven career intelligence system designed to analyze synthetic resume input, retrieve relevant job requirements, compute demand-weighted skill gaps, and generate an actionable learning roadmap.
+Skill Bridge is a modular, evidence-driven career intelligence system that:
+- Parses synthetic resume + GitHub-like input
+- Retrieves relevant job requirements from a local synthetic dataset
+- Computes demand-weighted, explainable skill gaps
+- Generates a time/budget-aware learning roadmap
+- Produces mock interview questions grounded in the gap output
 
-The system emphasizes:
-
-- Deterministic decision logic
-- Explainable outputs
-- AI integration with fallback
-- Reliability under degraded conditions
-- Clear engineering tradeoffs
-
-The goal was not UI polish, but structured engineering behavior.
+This project prioritizes **engineering behavior** (requirements, validation, edge cases, testing, and tradeoffs) over UI polish.
 
 ---
 
-# 2. System Architecture
+# 2. Diagrams
 
-```mermaid
-flowchart LR
-    A[User Input<br/>Resume + GitHub + Role + Preferences] --> B[Profile Extraction]
-    B --> C[Job Retrieval]
-    C --> D[Gap Analysis Engine]
-    D --> E[Roadmap Generator]
-    D --> F[Interview Generator]
-    E --> G[Output Dashboard]
-    F --> G
-```
+## 2.1 System Architecture Diagram
+![System Architecture](docs/diagrams/architecture.png)
 
-### Layers
-
-**Input Layer**
-- Resume parsing (PDF/DOCX/TXT)
-- GitHub metadata fetch (optional)
-- Role + budget + hours configuration
-
-**Intelligence Layer**
-- Hybrid extraction (LLM + fallback)
-- Semantic job retrieval
-- Demand-weighted gap scoring
-- Roadmap builder
-- Interview generator
-
-**Output Layer**
-- Gap dashboard
-- Weekly learning plan
-- Mock interview questions
+**What this shows:**  
+High-level module boundaries and how data moves from user inputs → intelligence pipeline → outputs.
 
 ---
 
-# 3. End-to-End Data Flow Diagram
+## 2.2 Hybrid Profile Extraction Diagram (AI + Fallback)
+![Hybrid Profile Extraction](docs/diagrams/hybrid_profile_extraction.png)
 
-```mermaid
-flowchart LR
-    U[User] --> P1[Input Validation + Parsing]
-    P1 --> P2[Profile Extraction]
-    P2 --> P3[Job Retrieval]
-    P3 --> P4[Gap Analysis]
-    P4 --> P5[Roadmap Generator]
-    P4 --> P6[Interview Generator]
-    P5 --> O[Dashboard Output]
-    P6 --> O
-
-    D1[(Skill Taxonomy)]
-    D2[(Job Dataset JSONL)]
-    D3[(Resources Catalog)]
-
-    D1 --> P2
-    D2 --> P3
-    D1 --> P4
-    D3 --> P5
-```
-
-All data stores are synthetic and included locally.
+**What this shows (technical):**
+- Primary path: LLM-based structured extraction returning schema-constrained JSON
+- Validation: strict schema parsing + taxonomy filtering
+- Fallback path: deterministic keyword extraction (token-boundary matching) when AI is unavailable or incorrect
 
 ---
 
-# 4. Hybrid Profile Extraction Architecture
+## 2.3 Data Flow Diagram (DFD)
+![Data Flow Diagram](docs/diagrams/data_flow.png)
 
-```mermaid
-flowchart TD
-    A[Resume + GitHub Text] --> B[LLM Structured Extraction]
-    B --> C{Valid JSON + Schema OK?}
-    C -->|Yes| D[Normalize + Filter to Taxonomy]
-    C -->|No| E[Keyword Extraction Fallback]
-    E --> D
-    D --> F[Profile JSON Output]
-```
-
-## Implementation Details
-
-Primary path:
-- LLM extracts structured JSON
-- Strict schema validation (Pydantic)
-- Skills filtered to taxonomy
-
-Fallback path:
-- Deterministic keyword matching
-- Token-boundary regex
-- Works without API key
-
-This ensures reliability even when AI fails.
+**What this shows:**  
+Processes and data stores end-to-end (resume parsing → extraction → retrieval → gap scoring → roadmap/interview → UI), including the synthetic datasets and configuration stores.
 
 ---
 
-# 5. Gap Analysis Engine (Core Logic)
+## 2.4 RAG Architecture Diagram
+![RAG Architecture](docs/diagrams/rag_architecture.png)
 
-```mermaid
-flowchart TD
-    A[Extracted Profile] --> D
-    B[Retrieved Job Chunks] --> D
-    C[Skill Taxonomy] --> D
-    E[Resume + GitHub Text] --> D
-
-    D[Demand + Evidence Scoring Engine] --> F[Classification]
-    F --> G[Top Missing Skills]
-    F --> H[Exposure Skills]
-    F --> I[Strengths]
-```
-
-## Technical Flow
-
-### Step 1 — Demand Scoring
-For each skill:
-- Count occurrences in retrieved job chunks
-- Store evidence snippets
-- Ignore low-signal skills (demand < threshold)
-
-### Step 2 — User Evidence Scoring
-- Count skill mentions in resume/GitHub
-- Classification:
-  - Strong (≥2 mentions)
-  - Exposure (1 mention)
-  - Missing (0 mentions)
-
-### Step 3 — Ranking
-- Filter by demand
-- Sort descending
-- Produce structured JSON output
-
-All outputs are explainable and evidence-backed.
+**What this shows (technical):**
+- Job dataset ingestion (JSONL)
+- Chunking strategy
+- Embedding generation
+- FAISS indexing and top-K retrieval
+- Retrieved chunks feeding the deterministic gap engine
 
 ---
 
-# 6. AI Integration + Fallback
+# 3. Core Flow (End-to-End)
 
-AI is used in two places:
-
-1. Structured profile extraction
-2. Optional roadmap/interview refinement
-
-Fallback logic ensures:
-- System works without API key
-- Schema validation prevents malformed responses
-- Deterministic scoring remains intact
-
-AI is assistive — not authoritative.
+1. User uploads resume (PDF/DOCX/TXT) and optionally adds GitHub URL / project notes  
+2. System parses and validates input text  
+3. Profile extraction runs (AI → schema validation → taxonomy filtering → fallback if needed)  
+4. Job requirement retrieval runs over synthetic job dataset  
+5. Gap engine computes demand-weighted missing/exposure/strength skills with evidence snippets  
+6. Roadmap generator maps gaps → curated resources + mini-projects (budget/time aware)  
+7. Interview generator produces gap-focused and strength deep-dive questions  
+8. Streamlit UI renders dashboard outputs
 
 ---
 
-# 7. Core Flow (Create → Analyze → View)
+# 4. AI Integration + Deterministic Fallback
 
-1. Upload resume
-2. Extract structured profile
-3. Retrieve relevant job requirements
-4. Compute skill gaps
-5. Generate roadmap
-6. Generate interview questions
-7. Display dashboard
+## Primary AI Capability: Structured Profile Extraction
+The system attempts to extract a structured profile object:
+- `target_role`
+- `skills[]` (constrained to taxonomy)
+- `projects[]`
+- `notes`
 
-Basic validation and error handling implemented throughout.
+### Reliability Controls
+- Strict schema validation (rejects malformed or extra keys)
+- Skill list filtered to the allowed taxonomy (prevents hallucinated skills)
+- If AI is unavailable/incorrect → deterministic fallback keyword extraction executes
 
----
-
-# 8. Testing
-
-Two basic tests implemented:
-
-## Happy Path
-- Valid resume input
-- Structured profile extraction
-- Gap engine produces expected structure
-
-## Edge Case
-- Empty resume input
-- Malformed LLM JSON
-- Fallback execution verified
-
-Testing focuses on behavior correctness over full coverage.
+AI is used **assistively**; final decisions (gap scoring) remain deterministic for reproducibility and explainability.
 
 ---
 
-# 9. Data Safety & Security
+# 5. Gap Analysis Engine (Demand-Weighted & Explainable)
 
-- Synthetic datasets only
-- No live scraping
-- No real personal data
-- `.env` used for secrets
-- `.env.example` provided
-- No API keys committed
+The gap engine is intentionally deterministic:
+
+**Inputs**
+- Extracted profile (skills)
+- Top-K retrieved job chunks
+- Skill taxonomy (name + synonyms)
+- Resume + GitHub text corpus
+
+**Core Logic**
+- **Demand score**: counts how often each skill appears in retrieved job chunks  
+- **User evidence**: counts mentions in resume/GitHub text with snippets  
+- Classifies skills as:
+  - **Strong** (≥2 mentions)
+  - **Exposure** (1 mention)
+  - **Missing** (0 mentions)
+- Filters low-signal skills (e.g., demand < 2)
+- Ranks missing/exposure by demand score
+- Returns evidence snippets from both job side and user side to keep outputs explainable
 
 ---
 
-# 10. Tradeoffs & Prioritization
+# 6. Data Safety & Security
+
+- Uses **synthetic datasets only** (no real personal data)
+- Does **not** scrape live sites
+- Does **not** commit API keys
+- Uses `.env` for secrets + includes `.env.example`
+
+---
+
+# 7. Testing (Basic Quality)
+
+At least two tests are included:
+- **Happy path**: valid input produces a profile + gap output structure
+- **Edge case**: empty/malformed input (or malformed AI response) triggers fallback or error handling
+
+Focus is on correctness under normal and degraded conditions.
+
+---
+
+# 8. Tradeoffs & Prioritization
 
 Given the 4–6 hour timebox, I prioritized:
-
-- Clean modular architecture
-- Deterministic gap scoring
+- Clear modular design
+- Deterministic + explainable scoring
 - AI fallback reliability
-- Explainable outputs
+- Input validation and clear error handling
+- Basic tests (happy path + edge case)
 
-Cut for time:
-- Production deployment
-- Advanced heuristics
-- Real-time ingestion
-- Extended test coverage
-
----
-
-# 11. Future Improvements
-
-If extended further:
-
-- Seniority-aware skill weighting
-- Real-time job ingestion
-- Index refresh pipeline
-- Async retrieval
-- CI/CD pipeline
-- Expanded testing coverage
-- User authentication
+Intentionally cut for time:
+- Production deployment + auth
+- Real-time ingestion/scraping
+- Advanced ranking heuristics
+- Full test suite coverage
 
 ---
 
-# 12. Quick Start
+# 9. Future Improvements
+
+- Skill seniority weighting (junior vs senior requirements)
+- Periodic index refresh pipeline for job datasets
+- Improved evaluation metrics for roadmap effectiveness
+- CI workflow (lint + tests) to enforce quality gates
+- Expanded tests and property-based edge case coverage
+
+---
+
+# 10. Quick Start
 
 ## Prerequisites
 - Python 3.10+
 - pip
 
 ## Setup
-
 ```bash
 git clone <repo>
-cd skill_bridge_career_navigator
+cd skill-bridge
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-```
-
-Create `.env`:
-
-```
-OPENAI_API_KEY=your_key_here
-```
-
-## Run
-
-```bash
-streamlit run app.py
-```
-
-## Run Tests
-
-```bash
-pytest
-```
-
----
-
-# 13. AI Disclosure
-
-**Did you use an AI assistant?**  
-Yes.
-
-**How did you verify suggestions?**
-- Manual code review
-- Schema validation enforcement
-- Edge case testing
-- Rejected overly LLM-dependent scoring logic
-
-**Example of rejected suggestion:**  
-Initially considered allowing the LLM to determine skill gaps directly. Rejected in favor of deterministic demand scoring for reproducibility and explainability.
-
----
-
-# 14. Reflection
-
-This project was approached as a structured engineering exercise under time constraints.
-
-The focus was:
-
-- Reliability over flash
-- Explainability over opacity
-- Deterministic logic where correctness matters
-- AI used thoughtfully with safeguards
-
-Thank you for the opportunity to build and demonstrate this system.
