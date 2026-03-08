@@ -258,7 +258,7 @@ If extended further:
 
 ```bash
 git clone <repo>
-cd skill-bridge
+cd skill_bridge_career_navigator
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
