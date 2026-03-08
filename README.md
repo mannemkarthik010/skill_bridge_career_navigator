@@ -44,7 +44,7 @@ The system is structured into three layers:
 
 ## Hybrid Profile Extraction
 
-![Hybrid Profile Extraction](Hybrid profile Extraction.png)
+![Hybrid Profile Extraction](Hybrid_Profile_Extraction.png)
 
 Profile extraction uses a dual-path strategy:
 
@@ -80,7 +80,7 @@ Retrieved chunks are passed to the deterministic gap engine.
 
 ## Data Flow
 
-![Data Flow Diagram](dataflow Diagram.png)
+![Data Flow Diagram](dataflow_Diagram.png)
 
 The data flow consists of:
 
