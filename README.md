@@ -64,7 +64,7 @@ This ensures resilience and reproducibility.
 
 ## RAG Pipeline
 
-![RAG Architecture](RAG_Pipeline.png)
+![RAG Architecture](RAG_pipeline.png)
 
 Job retrieval is implemented using a local semantic retrieval pipeline:
 
