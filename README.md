@@ -4,7 +4,7 @@
 ---
 
 ## Candidate Name
-Your Name
+Karthik Mannem
 
 ## Scenario Chosen
 Skill-Bridge Career Navigator
