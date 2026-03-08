@@ -3,13 +3,75 @@
     {"name": "Python", "synonyms": ["python3"]},
     {"name": "SQL", "synonyms": ["postgresql", "mysql", "sqlite", "t-sql"]},
     {"name": "Git", "synonyms": ["github", "gitlab"]},
-    {"name": "Linux", "synonyms": ["bash", "shell scripting"]},
+    {
+  "name": "Linux",
+  "synonyms": [
+    "linux",
+    "ubuntu",
+    "debian",
+    "centos",
+    "redhat",
+    "rhel",
+    "bash",
+    "shell scripting",
+    "ssh",
+    "systemd",
+    "cron",
+    "chmod",
+    "chown",
+    "apt",
+    "yum"
+  ]
+},
 
     {"name": "AWS", "synonyms": ["amazon web services", "ec2", "s3", "iam", "lambda"]},
     {"name": "Docker", "synonyms": ["containerization", "containers"]},
-    {"name": "Kubernetes", "synonyms": ["k8s"]},
-    {"name": "Terraform", "synonyms": ["iac", "infrastructure as code"]},
-    {"name": "CI/CD", "synonyms": ["continuous integration", "continuous delivery", "github actions", "jenkins"]},
+    {
+  "name": "Kubernetes",
+  "synonyms": [
+    "kubernetes",
+    "k8s",
+    "eks",
+    "helm",
+    "kubectl",
+    "ingress",
+    "deployment",
+    "service",
+    "hpa"]},
+    {
+  "name": "Terraform",
+  "synonyms": [
+    "terraform",
+    "iac",
+    "infrastructure as code",
+    "infra as code",
+    "hashicorp terraform",
+    "tf",
+    ".tf",
+    "terraform module",
+    "terraform modules",
+    "terraform plan",
+    "terraform apply"
+  ]
+},
+    {
+  "name": "CI/CD",
+  "synonyms": [
+    "ci cd",
+    "ci/cd",
+    "cicd",
+    "continuous integration",
+    "continuous delivery",
+    "continuous deployment",
+    "github actions",
+    "gitlab ci",
+    "jenkins",
+    "azure devops",
+    "pipeline",
+    "build pipeline",
+    "release pipeline"
+  ]
+},
 
     {"name": "Pandas", "synonyms": ["dataframe"]},
     {"name": "Excel", "synonyms": ["spreadsheets"]},
@@ -17,9 +79,32 @@
     {"name": "Tableau", "synonyms": []},
     {"name": "Statistics", "synonyms": ["hypothesis testing", "regression"]},
 
-    {"name": "Networking", "synonyms": ["tcp/ip", "dns", "http", "tls"]},
+    {
+  "name": "Networking",
+  "synonyms": [
+    "computer networks",
+    "networking fundamentals",
+    "network security",
+    "tcp ip",
+    "tcp/ip",
+    "dns",
+    "http",
+    "https",
+    "tls",
+    "ssl",
+    "vpc",
+    "subnet",
+    "route table",
+    "nat gateway",
+    "security group",
+    "nacl",
+    "load balancer",
+    "alb",
+    "nlb",
+    "vpn",
+    "cidr"]},
     {"name": "SIEM", "synonyms": ["splunk", "sentinel"]},
     {"name": "Threat Modeling", "synonyms": ["stride"]},
-    {"name": "OWASP", "synonyms": ["top 10", "web security"]}
+    {"name": "OWASP", "synonyms": [ "web security"]}
   ]
 }
